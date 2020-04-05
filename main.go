@@ -4,29 +4,27 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
-
-
+	"gopkg.in/mgo.v2/bson"
 	"github.com/Gatherme/gatherme-users-ms/connection"
 	"github.com/Gatherme/gatherme-users-ms/model"
 	"github.com/gorilla/mux"
-	"gopkg.in/mgo.v2/bson"
+
 )
 
-var prefixPath = "/api/compra"
+var prefixPath = "/api/users"
 
-// FindShoppingByIDController - Encuentra una compra por su ID
-func FindShoppingByIDController(w http.ResponseWriter, r *http.Request) {
+// FindUserByIDController - Encuentra un usuario por su ID
+func FindUserByIDController(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
-
-	shopping, err := connection.FindByID(params["id"])
+	user, err := connection.FindByID(params["id"])
 	if err != nil {
 		respondWithError(w, http.StatusBadRequest, err.Error())
 		return
 	}
-	respondWithJSON(w, http.StatusOK, shopping)
+	respondWithJSON(w, http.StatusOK, user)
 }
 
-// FindUserByUsernameController - Encuentra una compra por su ID
+// FindUserByUsernameController - Encuentra un usuario por su username
 func FindUserByUsernameController(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	user,err := connection.FindByUsername(params["username"]) 
@@ -38,8 +36,8 @@ func FindUserByUsernameController(w http.ResponseWriter, r *http.Request) {
 	respondWithJSON(w, http.StatusOK, user)
 }
 
-// CreateShoppingController - Crear una compra
-func CreateShoppingController(w http.ResponseWriter, r *http.Request) {
+// CreateUserController - Crear un usuario
+func CreateUserController(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
 	var shopping model.User
 	if err := json.NewDecoder(r.Body).Decode(&shopping); err != nil {
@@ -54,8 +52,8 @@ func CreateShoppingController(w http.ResponseWriter, r *http.Request) {
 	respondWithJSON(w, http.StatusCreated, shopping)
 }
 
-// UpdateShoppingController - Actualiza una compra
-func UpdateShoppingController(w http.ResponseWriter, r *http.Request) {
+// UpdateUserController - Actualiza un usuario 
+func UpdateUserController(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
 	var shopping model.User
 	if err := json.NewDecoder(r.Body).Decode(&shopping); err != nil {
@@ -69,8 +67,8 @@ func UpdateShoppingController(w http.ResponseWriter, r *http.Request) {
 	respondWithJSON(w, http.StatusOK, map[string]string{"result": "success"})
 }
 
-// DeleteShoppingController - Borrr una compra
-func DeleteShoppingController(w http.ResponseWriter, r *http.Request) {
+// DeleteUserController - Borrar un usuario pot id
+func DeleteUserController(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
 	var shoppingID model.UserID
 	if err := json.NewDecoder(r.Body).Decode(&shoppingID); err != nil {
@@ -87,10 +85,10 @@ func DeleteShoppingController(w http.ResponseWriter, r *http.Request) {
 func main() {
 	r := mux.NewRouter()
 
-	r.HandleFunc(prefixPath, CreateShoppingController).Methods("POST")
-	r.HandleFunc(prefixPath, UpdateShoppingController).Methods("PUT")
-	r.HandleFunc(prefixPath, DeleteShoppingController).Methods("DELETE")
-	r.HandleFunc(prefixPath+"/{id}", FindShoppingByIDController).Methods("GET")
+	r.HandleFunc(prefixPath+"/create-user", CreateUserController).Methods("POST")
+	r.HandleFunc(prefixPath+"/update-user", UpdateUserController).Methods("PUT")
+	r.HandleFunc(prefixPath+"/delete-user", DeleteUserController).Methods("DELETE")
+	r.HandleFunc(prefixPath+"/by-id/{id}", FindUserByIDController).Methods("GET")
 	r.HandleFunc(prefixPath+"/by-username/{username}", FindUserByUsernameController).Methods("GET")
 
 	log.Printf("Listening...")

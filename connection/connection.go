@@ -35,8 +35,8 @@ const (
 	COLLECTION = "users"
 )
 
-// Insert - Insert a Shopping
-func Insert(shopping model.User) error {
+// Insert - Insert a user
+func Insert(user model.User) error {
 	session, err := mgo.DialWithInfo(INFO)
 	if err != nil {
 		log.Fatal(err)
@@ -44,8 +44,8 @@ func Insert(shopping model.User) error {
 	}
 	defer session.Close()
 
-	shopping.ID = bson.NewObjectId()
-	session.DB(DBNAME).C(DOCNAME).Insert(shopping)
+	user.ID = bson.NewObjectId()
+	session.DB(DBNAME).C(DOCNAME).Insert(user)
 
 	if err != nil {
 		log.Fatal(err)
@@ -54,29 +54,29 @@ func Insert(shopping model.User) error {
 	return nil
 }
 
-// FindByID - ...
+// FindByID - ...	
 func FindByID(id string) (model.User, error) {
-	var shopping model.User
+	var user model.User
 	if !bson.IsObjectIdHex(id) {
 		err := errors.New("Invalid ID")
-		return shopping, err
+		return user, err
 	}
 
 	session, err := mgo.DialWithInfo(INFO)
 	if err != nil {
 		log.Fatal(err)
-		return shopping, err
+		return user, err
 	}
 	defer session.Close()
 	c := session.DB(DBNAME).C(DOCNAME)
 
 	oid := bson.ObjectIdHex(id)
-	err = c.FindId(oid).One(&shopping)
-	return shopping, err
+	err = c.FindId(oid).One(&user)
+	return user, err
 }
 
 // Update - ..
-func Update(shopping model.User) error {
+func Update(user model.User) error {
 	session, err := mgo.DialWithInfo(INFO)
 	if err != nil {
 		log.Fatal(err)
@@ -84,23 +84,23 @@ func Update(shopping model.User) error {
 	}
 	defer session.Close()
 	c := session.DB(DBNAME).C(DOCNAME)
-	err = c.UpdateId(shopping.ID, &shopping)
+	err = c.UpdateId(user.ID, &user)
 	return err
 }
 
 // FindByUser - ...
 func FindByUsername(idUser string) ([]model.User, error) {
-	var shoppings []model.User
+	var users []model.User
 	session, err := mgo.DialWithInfo(INFO)
 	if err != nil {
 		log.Fatal(err)
-		return shoppings, err
+		return users, err
 	}
 	defer session.Close()
 	c := session.DB(DBNAME).C(DOCNAME)
 
-	err = c.Find(bson.M{"username": idUser}).All(&shoppings)
-	return shoppings, err
+	err = c.Find(bson.M{"username": idUser}).All(&users)
+	return users, err
 }
 
 // Delete - ...
