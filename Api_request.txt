@@ -1,0 +1,62 @@
+POST
+
+http://127.0.0.1:3000/api/users/create-user
+Crear Usuario - retorna usuario creado
+Response - 201 Created
+
+Body{
+	"username": "hnsaavedraa",
+	"email": "pedroparamo@unal.edu.co",
+	"password": "Soyunacontranalalalala",
+	"picture": "iamgenenbinariodespues",
+	"description": "Lorem Ipsum",
+	"gender": "Male",
+	"age": 17,
+	"city": "Barrancabermeja",
+	"pleasures": ["sdghtf0043"],
+	"communities": ["dsfsdfdfsdf"],
+	"activities": ["098098","67867"],
+	"gathers": ["dsfsdf43","sdfsdf"]
+}
+
+
+GET
+
+http://127.0.0.1:3000/api/users/by-id/{id} 
+Busqueda por ID - retorna usuario, null en caso de no encontrar
+
+http://127.0.0.1:3000/api/users/by-username/{username} 
+Busqueda por username - retorna usuario, null en caso de no encontrar
+
+
+
+DELETE
+
+http://127.0.0.1:3000/api/users/delete-user
+Borrar usuario por ID - retorna Json con "error" o "result"
+Response
+
+Body{
+	id:"acavaelid"
+}
+
+PUT
+
+http://127.0.0.1:3000/api/users/update-user
+Actualizar usuario - retorna Json con error o result
+
+Body{
+	"id":"5e8a4842deb97a48d9ebaf83",
+	"username": "hnsaavedraa",
+	"email": "micorreoseactualizo@unal.edu.co",
+	"password": "Soyunacontranalalalala",
+	"picture": "iamgenenbinariodespues",
+	"description": "Lorem Ipsum",
+	"gender": "Male",
+	"age": 18,
+	"city": "Barrancabermeja",
+	"pleasures": ["actualizacion"],
+	"communities": ["dsfsdfdfsdf"],
+	"activities": ["098098","67867"],
+	"gathers": ["dsfsdf43","sdfsdf"]
+}
