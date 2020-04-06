@@ -27,6 +27,7 @@ const DBNAME = "user_db"
 
 // DOCNAME the name of the document
 const DOCNAME = "user"
+const DOCNAME_P = "pleasure"
 
 var db *mgo.Database
 
@@ -35,8 +36,9 @@ const (
 	COLLECTION = "users"
 )
 
+
 // Insert - Insert a user
-func Insert(user model.User) error {
+func InsertUser(user model.User) error {
 	session, err := mgo.DialWithInfo(INFO)
 	if err != nil {
 		log.Fatal(err)
@@ -54,8 +56,27 @@ func Insert(user model.User) error {
 	return nil
 }
 
-// FindByID - ...	
-func FindByID(id string) (model.User, error) {
+// Insert - Insert a pleasure
+func InsertPleasure(pleasure model.Pleasure) error {
+	session, err := mgo.DialWithInfo(INFO)
+	if err != nil {
+		log.Fatal(err)
+		return err
+	}
+	defer session.Close()
+
+	pleasure.ID = bson.NewObjectId()
+	session.DB(DBNAME).C(DOCNAME_P).Insert(pleasure)
+
+	if err != nil {
+		log.Fatal(err)
+		return err
+	}
+	return nil
+}
+
+// Find user by ID - ...	
+func FindUserByID(id string) (model.User, error) {
 	var user model.User
 	if !bson.IsObjectIdHex(id) {
 		err := errors.New("Invalid ID")
@@ -75,8 +96,30 @@ func FindByID(id string) (model.User, error) {
 	return user, err
 }
 
-// Update - ..
-func Update(user model.User) error {
+
+// Find user by ID - ...	
+func FindPleasureByID(id string) (model.Pleasure, error) {
+	var pleasure model.Pleasure
+	if !bson.IsObjectIdHex(id) {
+		err := errors.New("Invalid ID")
+		return pleasure, err
+	}
+
+	session, err := mgo.DialWithInfo(INFO)
+	if err != nil {
+		log.Fatal(err)
+		return pleasure, err
+	}
+	defer session.Close()
+	c := session.DB(DBNAME).C(DOCNAME_P)
+
+	oid := bson.ObjectIdHex(id)
+	err = c.FindId(oid).One(&pleasure)
+	return pleasure, err
+}
+
+// Update User - ..
+func UpdateUser(user model.User) error {
 	session, err := mgo.DialWithInfo(INFO)
 	if err != nil {
 		log.Fatal(err)
@@ -88,7 +131,21 @@ func Update(user model.User) error {
 	return err
 }
 
-// FindByUser - ...
+
+// Update Pleasure - ..
+func UpdatePleasure(pleasure model.Pleasure) error {
+	session, err := mgo.DialWithInfo(INFO)
+	if err != nil {
+		log.Fatal(err)
+		return err
+	}
+	defer session.Close()
+	c := session.DB(DBNAME).C(DOCNAME_P)
+	err = c.UpdateId(pleasure.ID, &pleasure)
+	return err
+}
+
+// Find User by username - ...
 func FindByUsername(idUser string) ([]model.User, error) {
 	var users []model.User
 	session, err := mgo.DialWithInfo(INFO)
@@ -103,8 +160,8 @@ func FindByUsername(idUser string) ([]model.User, error) {
 	return users, err
 }
 
-// Delete - ...
-func Delete(id string) error {
+// Delete User by id- ...
+func DeleteUser(id string) error {
 	if !bson.IsObjectIdHex(id) {
 		err := errors.New("Invalid ID")
 		return err
@@ -116,6 +173,25 @@ func Delete(id string) error {
 	}
 	defer session.Close()
 	c := session.DB(DBNAME).C(DOCNAME)
+
+	oid := bson.ObjectIdHex(id)
+	err = c.RemoveId(oid)
+	return err
+}
+
+// Delete Pleasure by id- ...
+func DeletePleasure(id string) error {
+	if !bson.IsObjectIdHex(id) {
+		err := errors.New("Invalid ID")
+		return err
+	}
+	session, err := mgo.DialWithInfo(INFO)
+	if err != nil {
+		log.Fatal(err)
+		return err
+	}
+	defer session.Close()
+	c := session.DB(DBNAME).C(DOCNAME_P)
 
 	oid := bson.ObjectIdHex(id)
 	err = c.RemoveId(oid)

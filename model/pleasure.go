@@ -5,9 +5,13 @@ import (
 )
 
 
-type Pleasures struct{
+type Pleasure struct{
 	ID          bson.ObjectId `bson:"_id" json:"id"`
 	Category    string        `bson:"category" json:"category"`
-	Name       	string        `bson:"email" json:"email"`
-	
+	Name       	string        `bson:"name" json:"name"`	
+}
+
+// UserID - for request
+type PleasureID struct {
+	ID string `json:"id"`
 }
