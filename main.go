@@ -47,6 +47,18 @@ func FindUserByUsernameController(w http.ResponseWriter, r *http.Request) {
 	respondWithJSON(w, http.StatusOK, user)
 }
 
+// FindUserByUsernameController - Encuentra un usuario por su username
+func FindPleasureByCategoryController(w http.ResponseWriter, r *http.Request) {
+	params := mux.Vars(r)
+	pleasure,err := connection.FindPleasuresByCategory(params["category"]) 
+	
+	if err != nil {
+		respondWithError(w, http.StatusBadRequest, "Invalid category")
+		return
+	}
+	respondWithJSON(w, http.StatusOK, pleasure)
+}
+
 // CreateUserController - Crear un usuario
 func CreateUserController(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
@@ -152,6 +164,7 @@ func main() {
 	r.HandleFunc(prefixPath+"/update-pleasure", UpdatePleasureController).Methods("PUT")
 	r.HandleFunc(prefixPath+"/delete-pleasure", DeletePleasureController).Methods("DELETE")
 	r.HandleFunc(prefixPath+"/pleasure-id/{id}", FindPleasureByIDController).Methods("GET")
+	r.HandleFunc(prefixPath+"/pleasure-category/{category}", FindPleasureByCategoryController).Methods("GET")
 
 	log.Printf("Listening...")
 	if err := http.ListenAndServe(":3000", r); err != nil {

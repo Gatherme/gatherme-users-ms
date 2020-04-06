@@ -1,3 +1,5 @@
+Usuarios
+
 POST
 
 http://127.0.0.1:3000/api/users/create-user
@@ -59,4 +61,47 @@ Body{
 	"communities": ["dsfsdfdfsdf"],
 	"activities": ["098098","67867"],
 	"gathers": ["dsfsdf43","sdfsdf"]
+}
+
+
+Gustos
+
+POST
+
+http://127.0.0.1:3000/api/users/create-pleasure
+Crear gusto - retorna gusto creado
+Body{
+	"category": "Deportivo",
+	"name": "Futbol"
+}
+
+
+
+GET
+
+http://127.0.0.1:3000/api/users/pleasure-category/{categoria}
+Busqueda por categoria - retorna todos los gustos de esa categoria, null en caso de no encontrar
+
+http://127.0.0.1:3000/api/users/pleasure-id/{id}
+Busqueda por id - retorna gusto , null en caso de no encontrar
+
+
+
+DELETE
+
+http://127.0.0.1:3000/api/users/delete-pleasure
+Borrar gusto por ID - retorna Json con "error" o "result"
+Body{
+	"id":"sdfsdfsd"
+}
+
+
+PUT
+
+http://127.0.0.1:3000/api/users/update-pleasure
+Actualizar gusto - retorna Json con error o result
+Body{
+	"id":"sdfsdfsd"
+	"category": "Deportivo",
+	"name": "Futbol"
 }

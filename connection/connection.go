@@ -160,6 +160,22 @@ func FindByUsername(idUser string) ([]model.User, error) {
 	return users, err
 }
 
+// Find User by username - ...
+func FindPleasuresByCategory(category string) ([]model.Pleasure, error) {
+	var pleasures []model.Pleasure
+	session, err := mgo.DialWithInfo(INFO)
+	if err != nil {
+		log.Fatal(err)
+		return pleasures, err
+	}
+	defer session.Close()
+	c := session.DB(DBNAME).C(DOCNAME_P)
+
+	err = c.Find(bson.M{"category": category}).All(&pleasures)
+	return pleasures, err
+}
+
+
 // Delete User by id- ...
 func DeleteUser(id string) error {
 	if !bson.IsObjectIdHex(id) {
