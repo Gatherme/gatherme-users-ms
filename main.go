@@ -24,6 +24,7 @@ func FindUserByIDController(w http.ResponseWriter, r *http.Request) {
 	respondWithJSON(w, http.StatusOK, user)
 }
 
+
 // FindUserByIDController - Encuentra un usuario por su ID
 func FindPleasureByIDController(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
@@ -72,6 +73,7 @@ func CreateUserController(w http.ResponseWriter, r *http.Request) {
 		respondWithError(w, http.StatusInternalServerError, err.Error())
 		return
 	}
+
 	respondWithJSON(w, http.StatusCreated, user)
 }
 
@@ -152,6 +154,10 @@ func DeletePleasureController(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+
+
+	
+
 	r := mux.NewRouter()
 
 	r.HandleFunc(prefixPath+"/create-user", CreateUserController).Methods("POST")

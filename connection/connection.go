@@ -39,6 +39,7 @@ const (
 
 // Insert - Insert a user
 func InsertUser(user model.User) error {
+
 	session, err := mgo.DialWithInfo(INFO)
 	if err != nil {
 		log.Fatal(err)
@@ -46,11 +47,41 @@ func InsertUser(user model.User) error {
 	}
 	defer session.Close()
 
+
+	c := session.DB(DBNAME).C(DOCNAME)
 	user.ID = bson.NewObjectId()
-	session.DB(DBNAME).C(DOCNAME).Insert(user)
+
+	index := mgo.Index{
+		Key:        []string{"username"},
+		Unique:     true,
+		DropDups:   true,
+		Background: true,
+		Sparse:     true,
+	}
+
+	err = c.EnsureIndex(index)
+	if err != nil {
+		return err
+	}
+
+	index2 := mgo.Index{
+		Key:        []string{ "email"},
+		Unique:     true,
+		DropDups:   true,
+		Background: true,
+		Sparse:     true,
+	}
+
+	err = c.EnsureIndex(index2)
+	if err != nil {
+		return err
+	}
+	
+	err = c.Insert(user)
+
 
 	if err != nil {
-		log.Fatal(err)
+		//log.Fatal(err)
 		return err
 	}
 	return nil
@@ -65,11 +96,26 @@ func InsertPleasure(pleasure model.Pleasure) error {
 	}
 	defer session.Close()
 
+	c := session.DB(DBNAME).C(DOCNAME_P)
 	pleasure.ID = bson.NewObjectId()
-	session.DB(DBNAME).C(DOCNAME_P).Insert(pleasure)
+
+	index := mgo.Index{
+		Key:        []string{"name"},
+		Unique:     true,
+		DropDups:   true,
+		Background: true,
+		Sparse:     true,
+	}
+
+	err = c.EnsureIndex(index)
+	if err != nil {
+		return err
+	}
+
+	err = c.Insert(pleasure)
 
 	if err != nil {
-		log.Fatal(err)
+		//log.Fatal(err)
 		return err
 	}
 	return nil
@@ -213,3 +259,4 @@ func DeletePleasure(id string) error {
 	err = c.RemoveId(oid)
 	return err
 }
+
