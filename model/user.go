@@ -22,6 +22,8 @@ type User struct {
 	Gathers		[]string      `bson:"gathers" json:"gathers"`
 }
 
+
+
 // UserID - for request
 type UserID struct {
 	ID string `json:"id"`
