@@ -1,0 +1,20 @@
+version: '3.3'
+services:
+  gatherme-users-ms:
+    container_name: 'gatherme-users-ms'
+    build: ./
+    ports: 
+      - 3000:3000
+    volumes:
+      - ./:/go/src/github.com/Gatherme/gatherme-users-ms
+
+
+  gatherme-users-db:
+      image: 'mongo:latest'
+      container_name: 'gatherme-users-db'
+      ports:
+        - '27100:27017'
+
+
+
+  

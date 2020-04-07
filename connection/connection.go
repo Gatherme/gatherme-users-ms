@@ -15,11 +15,8 @@ type Repository struct{}
 
 // INFO - to connect mongo
 var INFO = &mgo.DialInfo{
-	Addrs:    []string{"127.0.0.1:27017"},
-	Timeout:  60 * time.Second,
-	Database: "admin",
-	Username: "admin",
-	Password: "admin",
+	Addrs:   []string{"gatherme-users-db:27017"},
+	Timeout: 60 * time.Second,
 }
 
 // DBNAME the name of the DB instance
@@ -36,17 +33,18 @@ const (
 	COLLECTION = "users"
 )
 
-
 // Insert - Insert a user
 func InsertUser(user model.User) error {
+	log.Printf("Entro al metodo")
 
-	session, err := mgo.DialWithInfo(INFO)
+	session, err := mgo.Dial("gatherme-users-db:27017")
 	if err != nil {
+		log.Printf("Error de conexion")
 		log.Fatal(err)
+		log.Fatalln("mongo err")
 		return err
 	}
 	defer session.Close()
-
 
 	c := session.DB(DBNAME).C(DOCNAME)
 	user.ID = bson.NewObjectId()
@@ -65,7 +63,7 @@ func InsertUser(user model.User) error {
 	}
 
 	index2 := mgo.Index{
-		Key:        []string{ "email"},
+		Key:        []string{"email"},
 		Unique:     true,
 		DropDups:   true,
 		Background: true,
@@ -76,9 +74,8 @@ func InsertUser(user model.User) error {
 	if err != nil {
 		return err
 	}
-	
-	err = c.Insert(user)
 
+	err = c.Insert(user)
 
 	if err != nil {
 		//log.Fatal(err)
@@ -89,7 +86,7 @@ func InsertUser(user model.User) error {
 
 // Insert - Insert a pleasure
 func InsertPleasure(pleasure model.Pleasure) error {
-	session, err := mgo.DialWithInfo(INFO)
+	session, err := mgo.Dial("gatherme-users-db:27017")
 	if err != nil {
 		log.Fatal(err)
 		return err
@@ -121,7 +118,7 @@ func InsertPleasure(pleasure model.Pleasure) error {
 	return nil
 }
 
-// Find user by ID - ...	
+// Find user by ID - ...
 func FindUserByID(id string) (model.User, error) {
 	var user model.User
 	if !bson.IsObjectIdHex(id) {
@@ -129,7 +126,7 @@ func FindUserByID(id string) (model.User, error) {
 		return user, err
 	}
 
-	session, err := mgo.DialWithInfo(INFO)
+	session, err := mgo.Dial("gatherme-users-db:27017")
 	if err != nil {
 		log.Fatal(err)
 		return user, err
@@ -142,8 +139,7 @@ func FindUserByID(id string) (model.User, error) {
 	return user, err
 }
 
-
-// Find user by ID - ...	
+// Find user by ID - ...
 func FindPleasureByID(id string) (model.Pleasure, error) {
 	var pleasure model.Pleasure
 	if !bson.IsObjectIdHex(id) {
@@ -151,7 +147,7 @@ func FindPleasureByID(id string) (model.Pleasure, error) {
 		return pleasure, err
 	}
 
-	session, err := mgo.DialWithInfo(INFO)
+	session, err := mgo.Dial("gatherme-users-db:27017")
 	if err != nil {
 		log.Fatal(err)
 		return pleasure, err
@@ -166,7 +162,7 @@ func FindPleasureByID(id string) (model.Pleasure, error) {
 
 // Update User - ..
 func UpdateUser(user model.User) error {
-	session, err := mgo.DialWithInfo(INFO)
+	session, err := mgo.Dial("gatherme-users-db:27017")
 	if err != nil {
 		log.Fatal(err)
 		return err
@@ -177,10 +173,9 @@ func UpdateUser(user model.User) error {
 	return err
 }
 
-
 // Update Pleasure - ..
 func UpdatePleasure(pleasure model.Pleasure) error {
-	session, err := mgo.DialWithInfo(INFO)
+	session, err := mgo.Dial("gatherme-users-db:27017")
 	if err != nil {
 		log.Fatal(err)
 		return err
@@ -194,7 +189,7 @@ func UpdatePleasure(pleasure model.Pleasure) error {
 // Find User by username - ...
 func FindByUsername(idUser string) ([]model.User, error) {
 	var users []model.User
-	session, err := mgo.DialWithInfo(INFO)
+	session, err := mgo.Dial("gatherme-users-db:27017")
 	if err != nil {
 		log.Fatal(err)
 		return users, err
@@ -209,7 +204,7 @@ func FindByUsername(idUser string) ([]model.User, error) {
 // Find User by username - ...
 func FindPleasuresByCategory(category string) ([]model.Pleasure, error) {
 	var pleasures []model.Pleasure
-	session, err := mgo.DialWithInfo(INFO)
+	session, err := mgo.Dial("gatherme-users-db:27017")
 	if err != nil {
 		log.Fatal(err)
 		return pleasures, err
@@ -221,14 +216,13 @@ func FindPleasuresByCategory(category string) ([]model.Pleasure, error) {
 	return pleasures, err
 }
 
-
 // Delete User by id- ...
 func DeleteUser(id string) error {
 	if !bson.IsObjectIdHex(id) {
 		err := errors.New("Invalid ID")
 		return err
 	}
-	session, err := mgo.DialWithInfo(INFO)
+	session, err := mgo.Dial("gatherme-users-db:27017")
 	if err != nil {
 		log.Fatal(err)
 		return err
@@ -247,7 +241,7 @@ func DeletePleasure(id string) error {
 		err := errors.New("Invalid ID")
 		return err
 	}
-	session, err := mgo.DialWithInfo(INFO)
+	session, err := mgo.Dial("gatherme-users-db:27017")
 	if err != nil {
 		log.Fatal(err)
 		return err
@@ -259,4 +253,3 @@ func DeletePleasure(id string) error {
 	err = c.RemoveId(oid)
 	return err
 }
-
