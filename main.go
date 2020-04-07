@@ -4,11 +4,11 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
-	"gopkg.in/mgo.v2/bson"
+
 	"github.com/Gatherme/gatherme-users-ms/connection"
 	"github.com/Gatherme/gatherme-users-ms/model"
 	"github.com/gorilla/mux"
-
+	"gopkg.in/mgo.v2/bson"
 )
 
 var prefixPath = "/api/users"
@@ -24,7 +24,6 @@ func FindUserByIDController(w http.ResponseWriter, r *http.Request) {
 	respondWithJSON(w, http.StatusOK, user)
 }
 
-
 // FindUserByIDController - Encuentra un usuario por su ID
 func FindPleasureByIDController(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
@@ -39,8 +38,8 @@ func FindPleasureByIDController(w http.ResponseWriter, r *http.Request) {
 // FindUserByUsernameController - Encuentra un usuario por su username
 func FindUserByUsernameController(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
-	user,err := connection.FindByUsername(params["username"]) 
-	
+	user, err := connection.FindByUsername(params["username"])
+
 	if err != nil {
 		respondWithError(w, http.StatusBadRequest, "Invalid username")
 		return
@@ -51,8 +50,8 @@ func FindUserByUsernameController(w http.ResponseWriter, r *http.Request) {
 // FindUserByUsernameController - Encuentra un usuario por su username
 func FindPleasureByCategoryController(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
-	pleasure,err := connection.FindPleasuresByCategory(params["category"]) 
-	
+	pleasure, err := connection.FindPleasuresByCategory(params["category"])
+
 	if err != nil {
 		respondWithError(w, http.StatusBadRequest, "Invalid category")
 		return
@@ -93,7 +92,7 @@ func CreatePleasureController(w http.ResponseWriter, r *http.Request) {
 	respondWithJSON(w, http.StatusCreated, pleasure)
 }
 
-// UpdateUserController - Actualiza un usuario 
+// UpdateUserController - Actualiza un usuario
 func UpdateUserController(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
 	var user model.User
@@ -154,9 +153,6 @@ func DeletePleasureController(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-
-
-	
 
 	r := mux.NewRouter()
 
