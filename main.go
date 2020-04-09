@@ -11,7 +11,7 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-var prefixPath = "/api/users"
+var prefixPath = "/gatherme-users-ms"
 
 // FindUserByIDController - Encuentra un usuario por su ID
 func FindUserByIDController(w http.ResponseWriter, r *http.Request) {
@@ -25,14 +25,14 @@ func FindUserByIDController(w http.ResponseWriter, r *http.Request) {
 }
 
 // FindUserByIDController - Encuentra un usuario por su ID
-func FindPleasureByIDController(w http.ResponseWriter, r *http.Request) {
+func FindLikeByIDController(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
-	pleasure, err := connection.FindPleasureByID(params["id"])
+	like, err := connection.FindLikeByID(params["id"])
 	if err != nil {
 		respondWithError(w, http.StatusBadRequest, err.Error())
 		return
 	}
-	respondWithJSON(w, http.StatusOK, pleasure)
+	respondWithJSON(w, http.StatusOK, like)
 }
 
 // FindUserByUsernameController - Encuentra un usuario por su username
@@ -48,15 +48,15 @@ func FindUserByUsernameController(w http.ResponseWriter, r *http.Request) {
 }
 
 // FindUserByUsernameController - Encuentra un usuario por su username
-func FindPleasureByCategoryController(w http.ResponseWriter, r *http.Request) {
+func FindLikeByCategoryController(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
-	pleasure, err := connection.FindPleasuresByCategory(params["category"])
+	like, err := connection.FindLikesByCategory(params["category"])
 
 	if err != nil {
 		respondWithError(w, http.StatusBadRequest, "Invalid category")
 		return
 	}
-	respondWithJSON(w, http.StatusOK, pleasure)
+	respondWithJSON(w, http.StatusOK, like)
 }
 
 // CreateUserController - Crear un usuario
@@ -76,20 +76,20 @@ func CreateUserController(w http.ResponseWriter, r *http.Request) {
 	respondWithJSON(w, http.StatusCreated, user)
 }
 
-// CreatePleasureController - Crear un gusto
-func CreatePleasureController(w http.ResponseWriter, r *http.Request) {
+// CreatelikeController - Crear un gusto
+func CreateLikeController(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
-	var pleasure model.Pleasure
-	if err := json.NewDecoder(r.Body).Decode(&pleasure); err != nil {
+	var like model.Like
+	if err := json.NewDecoder(r.Body).Decode(&like); err != nil {
 		respondWithError(w, http.StatusBadRequest, "Invalid request")
 		return
 	}
-	pleasure.ID = bson.NewObjectId()
-	if err := connection.InsertPleasure(pleasure); err != nil {
+	like.ID = bson.NewObjectId()
+	if err := connection.InsertLike(like); err != nil {
 		respondWithError(w, http.StatusInternalServerError, err.Error())
 		return
 	}
-	respondWithJSON(w, http.StatusCreated, pleasure)
+	respondWithJSON(w, http.StatusCreated, like)
 }
 
 // UpdateUserController - Actualiza un usuario
@@ -107,15 +107,15 @@ func UpdateUserController(w http.ResponseWriter, r *http.Request) {
 	respondWithJSON(w, http.StatusOK, map[string]string{"result": "success"})
 }
 
-// UpdatePleasureController - Actualiza un gusto
-func UpdatePleasureController(w http.ResponseWriter, r *http.Request) {
+// UpdatelikeController - Actualiza un gusto
+func UpdateLikeController(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
-	var pleasure model.Pleasure
-	if err := json.NewDecoder(r.Body).Decode(&pleasure); err != nil {
+	var like model.Like
+	if err := json.NewDecoder(r.Body).Decode(&like); err != nil {
 		respondWithError(w, http.StatusBadRequest, "Invalid request")
 		return
 	}
-	if err := connection.UpdatePleasure(pleasure); err != nil {
+	if err := connection.UpdateLike(like); err != nil {
 		respondWithError(w, http.StatusInternalServerError, err.Error())
 		return
 	}
@@ -137,15 +137,15 @@ func DeleteUserController(w http.ResponseWriter, r *http.Request) {
 	respondWithJSON(w, http.StatusOK, map[string]string{"result": "success"})
 }
 
-// DeletePleasureController - Borrar un usuario pot id
-func DeletePleasureController(w http.ResponseWriter, r *http.Request) {
+// DeletelikeController - Borrar un usuario pot id
+func DeleteLikeController(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
-	var pleasureID model.PleasureID
-	if err := json.NewDecoder(r.Body).Decode(&pleasureID); err != nil {
+	var likeID model.LikeID
+	if err := json.NewDecoder(r.Body).Decode(&likeID); err != nil {
 		respondWithError(w, http.StatusBadRequest, "Invalid request")
 		return
 	}
-	if err := connection.DeletePleasure(pleasureID.ID); err != nil {
+	if err := connection.DeleteLike(likeID.ID); err != nil {
 		respondWithError(w, http.StatusInternalServerError, err.Error())
 		return
 	}
@@ -159,16 +159,16 @@ func main() {
 	r.HandleFunc(prefixPath+"/create-user", CreateUserController).Methods("POST")
 	r.HandleFunc(prefixPath+"/update-user", UpdateUserController).Methods("PUT")
 	r.HandleFunc(prefixPath+"/delete-user", DeleteUserController).Methods("DELETE")
-	r.HandleFunc(prefixPath+"/by-id/{id}", FindUserByIDController).Methods("GET")
-	r.HandleFunc(prefixPath+"/by-username/{username}", FindUserByUsernameController).Methods("GET")
+	r.HandleFunc(prefixPath+"/user-id/{id}", FindUserByIDController).Methods("GET")
+	r.HandleFunc(prefixPath+"/user-username/{username}", FindUserByUsernameController).Methods("GET")
 
-	r.HandleFunc(prefixPath+"/create-pleasure", CreatePleasureController).Methods("POST")
-	r.HandleFunc(prefixPath+"/update-pleasure", UpdatePleasureController).Methods("PUT")
-	r.HandleFunc(prefixPath+"/delete-pleasure", DeletePleasureController).Methods("DELETE")
-	r.HandleFunc(prefixPath+"/pleasure-id/{id}", FindPleasureByIDController).Methods("GET")
-	r.HandleFunc(prefixPath+"/pleasure-category/{category}", FindPleasureByCategoryController).Methods("GET")
+	r.HandleFunc(prefixPath+"/create-like", CreateLikeController).Methods("POST")
+	r.HandleFunc(prefixPath+"/update-like", UpdateLikeController).Methods("PUT")
+	r.HandleFunc(prefixPath+"/delete-like", DeleteLikeController).Methods("DELETE")
+	r.HandleFunc(prefixPath+"/like-id/{id}", FindLikeByIDController).Methods("GET")
+	r.HandleFunc(prefixPath+"/like-category/{category}", FindLikeByCategoryController).Methods("GET")
 
-	log.Printf("Listening...")
+	log.Printf("Listening port 3000...")
 	if err := http.ListenAndServe(":3000", r); err != nil {
 		log.Fatal(err)
 	}

@@ -1,0 +1,384 @@
+#Test with: http://editor.swagger.io/
+
+swagger: '2.0'
+info:
+  version: 1.0.0
+  title: gatherme-users-ms
+  description: Go + MongoDB
+  license:
+    name: Software Architecture, 2020-I
+host: host:3000
+basePath: /gatherme-users-ms/
+schemes:
+  - http
+consumes:
+  - application/json
+produces:
+  - application/json
+paths:
+  /create-user:
+    post:
+      summary: Creates a new user
+      operationId: createUser
+      parameters:
+        - name: user
+          in: body
+          required: true
+          description: User Object
+          schema:
+            $ref: '#/definitions/UserInput'
+       
+      responses:
+        '201':
+          description: Created
+          schema:
+            $ref: '#/definitions/User'
+        '400':
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/ErrorModel'
+        '500':
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/ErrorModel'
+
+  /create-like:
+    post:
+      summary: Creates a new like
+      operationId: createLike
+      parameters:
+        - name: like
+          in: body
+          required: true
+          description: Like Object
+          schema:
+            $ref: '#/definitions/LikeInput'
+       
+      responses:
+        '201':
+          description: Created
+          schema:
+            $ref: '#/definitions/Like'
+        '400':
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/ErrorModel'
+        '500':
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/ErrorModel'
+
+
+  /user-id/{id}:
+    get:
+      summary: Returns an user with the given id
+      operationId: getUserById
+      parameters:
+        - name: id
+          in: path
+          description: The id of the user to be returned
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Ok (Return null if not exist)
+          schema:
+            $ref: '#/definitions/UserList'
+            
+        '400':
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/ErrorModel'
+            
+            
+  /like-id/{id}:
+    get:
+      summary: Returns an like with the given id
+      operationId: getLikeById
+      parameters:
+        - name: id
+          in: path
+          description: The id of the like to be returned
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Ok (Return null if not exist)
+          schema:
+            $ref: '#/definitions/LikesList'
+            
+        '400':
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/ErrorModel'
+            
+
+        
+            
+  /user-username/{username}:
+    get:
+      summary: Returns an user with the given username
+      operationId: getUserByUsername
+      parameters:
+        - name: username
+          in: path
+          description: The id of the user to be returned
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Ok (Return null if not exist)
+          schema:
+            $ref: '#/definitions/UserList'
+            
+  /like-category/{category}:
+    get:
+      summary: Returns likes with the given category
+      operationId: getLikesByCategory
+      parameters:
+        - name: category
+          in: path
+          description: The name of the category to be returned
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Ok (Return null if not exist)
+          schema:
+            $ref: '#/definitions/LikesList'
+            
+            
+
+  /update-user:
+    put:
+      summary: Updates an user 
+      operationId: updateUser
+      parameters:
+        - name: user
+          in: body
+          required: true
+          description: User Object
+          schema:
+            $ref: '#/definitions/User'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/SuccessModel'
+          
+        '500':
+          description: Internal Server Error (Invalid Params) (Not Found)
+          schema:
+            $ref: '#/definitions/ErrorModel'
+  
+  /update-like:
+    put:
+      summary: Updates an like 
+      operationId: updateLike
+      parameters:
+        - name: like
+          in: body
+          required: true
+          description: Like Object
+          schema:
+            $ref: '#/definitions/Like'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/SuccessModel'
+          
+        '500':
+          description: Internal Server Error (Invalid Params) (Not Found)
+          schema:
+            $ref: '#/definitions/ErrorModel'
+
+
+  /delete-user:
+    delete:
+      summary: Deletes an user with the given id
+      operationId: deleteUser
+      parameters:
+        - name: id
+          in: body
+          description: The id of the user to be deleted
+          required: true
+          schema: 
+            $ref: '#/definitions/DeleteInput'
+      responses:
+        '200':
+          description: Ok
+          schema:
+            $ref: '#/definitions/SuccessModel'
+        '500':
+          description: Internal Server Error (Invalid Params) (Not Found)
+          schema:
+            $ref: '#/definitions/ErrorModel'
+            
+  
+
+  /delete-like:
+    delete:
+      summary: Deletes an like with the given id
+      operationId: deleteLike
+      parameters:
+        - name: id
+          in: body
+          description: The id of the like to be deleted
+          required: true
+          schema: 
+            $ref: '#/definitions/DeleteInput'
+      responses:
+        '200':
+          description: Ok
+          schema:
+            $ref: '#/definitions/SuccessModel'
+        '500':
+          description: Internal Server Error (Invalid Params) (Not Found)
+          schema:
+            $ref: '#/definitions/ErrorModel'
+
+definitions:
+
+  # Users
+  User:
+    type: object
+    properties:
+      id:
+        type: string
+      username:
+        type: string
+      name:
+        type: string
+      email:
+        type: string
+      picture:
+        type: string
+      description:
+        type: string
+      gender:
+        type: string
+      age:
+        type: string
+      city:
+        type: string
+      likes:
+        type: array
+        items:
+          type: string
+      communities:
+        type: array
+        items:
+          type: string
+      activities:
+        type: array
+        items:
+          type: string
+      gathers:
+        type: array
+        items:
+          type: string
+  
+  Like:
+    type: object
+    properties:
+      id:
+        type: string
+      category:
+        type: string
+      name:
+        type: string
+          
+          
+  LikeInput:
+    type: object
+    properties:
+      category:
+        type: string
+      name:
+        type: string
+
+  UserInput:
+    type: object
+    properties:
+      username:
+        type: string
+      name:
+        type: string
+      email:
+        type: string
+      picture:
+        type: string
+      description:
+        type: string
+      gender:
+        type: string
+      age:
+        type: string
+      city:
+        type: string
+      likes:
+        type: array
+        items:
+          type: string
+      communities:
+        type: array
+        items:
+          type: string
+      activities:
+        type: array
+        items:
+          type: string
+      gathers:
+        type: array
+        items:
+          type: string
+          
+  DeleteInput:
+    type: object
+    properties:
+      id:
+        type: string
+  
+          
+  
+  LikesList:
+    type: array
+    items:
+      $ref: '#/definitions/Like'
+  
+  UserList:
+    type: array
+    items:
+      $ref: '#/definitions/User'
+
+
+
+# Errors
+  ErrorModel:
+    type: object
+    required:
+      - error
+    properties:
+      error:
+        type: string
+  
+  SuccessModel:
+    type: object
+    required:
+      - result
+    properties:
+      result:
+        type: string
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+

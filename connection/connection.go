@@ -24,7 +24,7 @@ const DBNAME = "user_db"
 
 // DOCNAME the name of the document
 const DOCNAME = "user"
-const DOCNAME_P = "pleasure"
+const DOCNAME_P = "like"
 
 var db *mgo.Database
 
@@ -35,11 +35,9 @@ const (
 
 // Insert - Insert a user
 func InsertUser(user model.User) error {
-	log.Printf("Entro al metodo")
-
 	session, err := mgo.Dial("gatherme-users-db:27017")
 	if err != nil {
-		log.Printf("Error de conexion")
+		log.Printf("Error de conexion con Mongo")
 		log.Fatal(err)
 		log.Fatalln("mongo err")
 		return err
@@ -84,8 +82,8 @@ func InsertUser(user model.User) error {
 	return nil
 }
 
-// Insert - Insert a pleasure
-func InsertPleasure(pleasure model.Pleasure) error {
+// Insert - Insert a like
+func InsertLike(like model.Like) error {
 	session, err := mgo.Dial("gatherme-users-db:27017")
 	if err != nil {
 		log.Fatal(err)
@@ -94,7 +92,7 @@ func InsertPleasure(pleasure model.Pleasure) error {
 	defer session.Close()
 
 	c := session.DB(DBNAME).C(DOCNAME_P)
-	pleasure.ID = bson.NewObjectId()
+	like.ID = bson.NewObjectId()
 
 	index := mgo.Index{
 		Key:        []string{"name"},
@@ -109,10 +107,9 @@ func InsertPleasure(pleasure model.Pleasure) error {
 		return err
 	}
 
-	err = c.Insert(pleasure)
+	err = c.Insert(like)
 
 	if err != nil {
-		//log.Fatal(err)
 		return err
 	}
 	return nil
@@ -140,24 +137,24 @@ func FindUserByID(id string) (model.User, error) {
 }
 
 // Find user by ID - ...
-func FindPleasureByID(id string) (model.Pleasure, error) {
-	var pleasure model.Pleasure
+func FindLikeByID(id string) (model.Like, error) {
+	var like model.Like
 	if !bson.IsObjectIdHex(id) {
 		err := errors.New("Invalid ID")
-		return pleasure, err
+		return like, err
 	}
 
 	session, err := mgo.Dial("gatherme-users-db:27017")
 	if err != nil {
 		log.Fatal(err)
-		return pleasure, err
+		return like, err
 	}
 	defer session.Close()
 	c := session.DB(DBNAME).C(DOCNAME_P)
 
 	oid := bson.ObjectIdHex(id)
-	err = c.FindId(oid).One(&pleasure)
-	return pleasure, err
+	err = c.FindId(oid).One(&like)
+	return like, err
 }
 
 // Update User - ..
@@ -173,8 +170,8 @@ func UpdateUser(user model.User) error {
 	return err
 }
 
-// Update Pleasure - ..
-func UpdatePleasure(pleasure model.Pleasure) error {
+// Update Like - ..
+func UpdateLike(like model.Like) error {
 	session, err := mgo.Dial("gatherme-users-db:27017")
 	if err != nil {
 		log.Fatal(err)
@@ -182,7 +179,7 @@ func UpdatePleasure(pleasure model.Pleasure) error {
 	}
 	defer session.Close()
 	c := session.DB(DBNAME).C(DOCNAME_P)
-	err = c.UpdateId(pleasure.ID, &pleasure)
+	err = c.UpdateId(like.ID, &like)
 	return err
 }
 
@@ -202,18 +199,18 @@ func FindByUsername(idUser string) ([]model.User, error) {
 }
 
 // Find User by username - ...
-func FindPleasuresByCategory(category string) ([]model.Pleasure, error) {
-	var pleasures []model.Pleasure
+func FindLikesByCategory(category string) ([]model.Like, error) {
+	var likes []model.Like
 	session, err := mgo.Dial("gatherme-users-db:27017")
 	if err != nil {
 		log.Fatal(err)
-		return pleasures, err
+		return likes, err
 	}
 	defer session.Close()
 	c := session.DB(DBNAME).C(DOCNAME_P)
 
-	err = c.Find(bson.M{"category": category}).All(&pleasures)
-	return pleasures, err
+	err = c.Find(bson.M{"category": category}).All(&likes)
+	return likes, err
 }
 
 // Delete User by id- ...
@@ -235,8 +232,8 @@ func DeleteUser(id string) error {
 	return err
 }
 
-// Delete Pleasure by id- ...
-func DeletePleasure(id string) error {
+// Delete Like by id- ...
+func DeleteLike(id string) error {
 	if !bson.IsObjectIdHex(id) {
 		err := errors.New("Invalid ID")
 		return err
