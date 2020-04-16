@@ -45,7 +45,7 @@ func InsertUser(user model.User) error {
 	defer session.Close()
 
 	c := session.DB(DBNAME).C(DOCNAME)
-	user.ID = bson.NewObjectId()
+	//user.ID = bson.NewObjectId()
 
 	index := mgo.Index{
 		Key:        []string{"username"},
@@ -92,7 +92,6 @@ func InsertLike(like model.Like) error {
 	defer session.Close()
 
 	c := session.DB(DBNAME).C(DOCNAME_P)
-	like.ID = bson.NewObjectId()
 
 	index := mgo.Index{
 		Key:        []string{"name"},
@@ -106,7 +105,7 @@ func InsertLike(like model.Like) error {
 	if err != nil {
 		return err
 	}
-
+	//like.ID = bson.NewObjectId()
 	err = c.Insert(like)
 
 	if err != nil {
