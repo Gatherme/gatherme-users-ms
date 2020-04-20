@@ -11,9 +11,10 @@ services:
 
   gatherme-users-db:
       image: 'mongo:latest'
+      command: mongod --port 27019
       container_name: 'gatherme-users-db'
       ports:
-        - '27100:27017'
+        - '27019:27019'
 
 
 

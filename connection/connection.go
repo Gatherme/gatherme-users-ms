@@ -15,7 +15,7 @@ type Repository struct{}
 
 // INFO - to connect mongo
 var INFO = &mgo.DialInfo{
-	Addrs:   []string{"gatherme-users-db:27017"},
+	Addrs:   []string{"gatherme-users-db:27019"},
 	Timeout: 60 * time.Second,
 }
 
@@ -35,7 +35,7 @@ const (
 
 // Insert - Insert a user
 func InsertUser(user model.User) error {
-	session, err := mgo.Dial("gatherme-users-db:27017")
+	session, err := mgo.Dial("gatherme-users-db:27019")
 	if err != nil {
 		log.Printf("Error de conexion con Mongo")
 		log.Fatal(err)
@@ -84,7 +84,7 @@ func InsertUser(user model.User) error {
 
 // Insert - Insert a like
 func InsertLike(like model.Like) error {
-	session, err := mgo.Dial("gatherme-users-db:27017")
+	session, err := mgo.Dial("gatherme-users-db:27019")
 	if err != nil {
 		log.Fatal(err)
 		return err
@@ -122,7 +122,7 @@ func FindUserByID(id string) (model.User, error) {
 		return user, err
 	}
 
-	session, err := mgo.Dial("gatherme-users-db:27017")
+	session, err := mgo.Dial("gatherme-users-db:27019")
 	if err != nil {
 		log.Fatal(err)
 		return user, err
@@ -143,7 +143,7 @@ func FindLikeByID(id string) (model.Like, error) {
 		return like, err
 	}
 
-	session, err := mgo.Dial("gatherme-users-db:27017")
+	session, err := mgo.Dial("gatherme-users-db:27019")
 	if err != nil {
 		log.Fatal(err)
 		return like, err
@@ -158,7 +158,7 @@ func FindLikeByID(id string) (model.Like, error) {
 
 // Update User - ..
 func UpdateUser(user model.User) error {
-	session, err := mgo.Dial("gatherme-users-db:27017")
+	session, err := mgo.Dial("gatherme-users-db:27019")
 	if err != nil {
 		log.Fatal(err)
 		return err
@@ -171,7 +171,7 @@ func UpdateUser(user model.User) error {
 
 // Update Like - ..
 func UpdateLike(like model.Like) error {
-	session, err := mgo.Dial("gatherme-users-db:27017")
+	session, err := mgo.Dial("gatherme-users-db:27019")
 	if err != nil {
 		log.Fatal(err)
 		return err
@@ -185,7 +185,7 @@ func UpdateLike(like model.Like) error {
 // Find User by username - ...
 func FindByUsername(idUser string) ([]model.User, error) {
 	var users []model.User
-	session, err := mgo.Dial("gatherme-users-db:27017")
+	session, err := mgo.Dial("gatherme-users-db:27019")
 	if err != nil {
 		log.Fatal(err)
 		return users, err
@@ -200,7 +200,7 @@ func FindByUsername(idUser string) ([]model.User, error) {
 // Find User by username - ...
 func FindLikesByCategory(category string) ([]model.Like, error) {
 	var likes []model.Like
-	session, err := mgo.Dial("gatherme-users-db:27017")
+	session, err := mgo.Dial("gatherme-users-db:27019")
 	if err != nil {
 		log.Fatal(err)
 		return likes, err
@@ -218,7 +218,7 @@ func DeleteUser(id string) error {
 		err := errors.New("Invalid ID")
 		return err
 	}
-	session, err := mgo.Dial("gatherme-users-db:27017")
+	session, err := mgo.Dial("gatherme-users-db:27019")
 	if err != nil {
 		log.Fatal(err)
 		return err
@@ -237,7 +237,7 @@ func DeleteLike(id string) error {
 		err := errors.New("Invalid ID")
 		return err
 	}
-	session, err := mgo.Dial("gatherme-users-db:27017")
+	session, err := mgo.Dial("gatherme-users-db:27019")
 	if err != nil {
 		log.Fatal(err)
 		return err
