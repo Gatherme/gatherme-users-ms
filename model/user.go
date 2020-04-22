@@ -16,8 +16,8 @@ type User struct {
 	Age         int           `bson:"age" json:"age"`
 	City        string        `bson:"city" json:"city"`
 	Likes       []string      `bson:"likes" json:"likes"`
-	Communities []string      `bson:"communities" json:"communities"`
-	Activities  []string      `bson:"activities" json:"activities"`
+	Communities []int         `bson:"communities" json:"communities"`
+	Activities  []int         `bson:"activities" json:"activities"`
 	Gathers     []string      `bson:"gathers" json:"gathers"`
 }
 

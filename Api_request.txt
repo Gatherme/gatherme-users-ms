@@ -15,7 +15,7 @@ Body{
 	"gender": "Male",
 	"age": 17,
 	"city": "Barrancabermeja",
-	"pleasures": ["sdghtf0043"],
+	"likes": ["sdghtf0043"],
 	"communities": ["dsfsdfdfsdf"],
 	"activities": ["098098","67867"],
 	"gathers": ["dsfsdf43","sdfsdf"]
@@ -58,8 +58,8 @@ Body{
 	"age": 18,
 	"city": "Barrancabermeja",
 	"pleasures": ["actualizacion"],
-	"communities": ["dsfsdfdfsdf"],
-	"activities": ["098098","67867"],
+	"communities": [2342],  
+	"activities": [098098,67867], 
 	"gathers": ["dsfsdf43","sdfsdf"]
 }
 
