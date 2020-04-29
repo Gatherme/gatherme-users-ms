@@ -198,6 +198,23 @@ func FindByUsername(idUser string) ([]model.User, error) {
 }
 
 // Find User by username - ...
+func FindByEmail(email string) ([]model.User, error) {
+	log.Printf(email)
+	var users []model.User
+	session, err := mgo.Dial("gatherme-users-db:27019")
+	if err != nil {
+		log.Fatal(err)
+		return users, err
+	}
+	defer session.Close()
+	c := session.DB(DBNAME).C(DOCNAME)
+
+	err = c.Find(bson.M{"email": email}).All(&users)
+
+	return users, err
+}
+
+// Find User by username - ...
 func FindLikesByCategory(category string) ([]model.Like, error) {
 	var likes []model.Like
 	session, err := mgo.Dial("gatherme-users-db:27019")

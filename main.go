@@ -47,6 +47,18 @@ func FindUserByUsernameController(w http.ResponseWriter, r *http.Request) {
 	respondWithJSON(w, http.StatusOK, user)
 }
 
+// FindUserByEmailController - Encuentra un usuario por su email
+func FindUserByEmailController(w http.ResponseWriter, r *http.Request) {
+	params := mux.Vars(r)
+	user, err := connection.FindByEmail(params["email"])
+
+	if err != nil {
+		respondWithError(w, http.StatusBadRequest, "Invalid email")
+		return
+	}
+	respondWithJSON(w, http.StatusOK, user)
+}
+
 // FindUserByUsernameController - Encuentra un usuario por su username
 func FindLikeByCategoryController(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
@@ -160,6 +172,7 @@ func main() {
 	r.HandleFunc(prefixPath+"/update-user", UpdateUserController).Methods("PUT")
 	r.HandleFunc(prefixPath+"/delete-user", DeleteUserController).Methods("DELETE")
 	r.HandleFunc(prefixPath+"/user-id/{id}", FindUserByIDController).Methods("GET")
+	r.HandleFunc(prefixPath+"/user-email/{email}", FindUserByEmailController).Methods("GET")
 	r.HandleFunc(prefixPath+"/user-username/{username}", FindUserByUsernameController).Methods("GET")
 
 	r.HandleFunc(prefixPath+"/create-like", CreateLikeController).Methods("POST")
