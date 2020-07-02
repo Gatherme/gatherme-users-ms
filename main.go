@@ -182,8 +182,11 @@ func main() {
 	r.HandleFunc(prefixPath+"/like-category/{category}", FindLikeByCategoryController).Methods("GET")
 
 	log.Printf("Listening port 3000...")
+	log.Printf("test...")
+
 	if err := http.ListenAndServe(":3000", r); err != nil {
 		log.Fatal(err)
+		log.Printf("Fatal Error")
 	}
 }
 

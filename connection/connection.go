@@ -184,8 +184,9 @@ func UpdateLike(like model.Like) error {
 
 // Find User by username - ...
 func FindByUsername(idUser string) ([]model.User, error) {
+	log.Printf("Find by username")
 	var users []model.User
-	session, err := mgo.Dial("gatherme-users-db:27019")
+	session, err := mgo.Dial("127.0.0.1:27017")
 	if err != nil {
 		log.Fatal(err)
 		return users, err

@@ -6,3 +6,4 @@ RUN go get -v
 RUN go install github.com/Gatherme/gatherme-users-ms
 ENTRYPOINT /go/bin/gatherme-users-ms
 EXPOSE 3000
+
